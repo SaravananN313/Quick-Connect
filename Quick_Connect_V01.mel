@@ -1,0 +1,1109 @@
+global proc UI()
+{
+if(`window -ex qc`)
+    deleteUI qc;
+window -h 656 -w 400 -s off -t "Quick Connect  >>>" qc;
+showWindow qc; 
+if(`window -ex wr`)
+deleteUI wr;
+columnLayout;
+separator -h 10 -w 400  -st "in";
+text -l "... Quick way to connect multiple objects at a time ..." -al "center" -w 400 -h 20 txt;
+separator -h 10 -w 400  -st "in";
+setParent -u;
+rowColumnLayout -vis off -w 400 -nc 5 uii;
+text -l "Do you want to continue" -al "center" -w 400 ;
+setParent -u;
+separator -h 5;
+rowColumnLayout -vis off -w 400 -nc 10 uiii;
+text -l "" -w 121;
+button -l "YES" -w 75 -c Yes s;
+text -l "";
+button -l "NO" -w 75 -c n n;
+setParent -u;
+separator -h 1 sp;
+rowColumnLayout -nc 10;
+text -l "";
+textScrollList -ekf off -ams on -w 190 -h 300 srtx;
+text -l "";
+textScrollList -ekf off -ams on -w 190 -h 300 trtx;
+setParent -u;
+separator -h 5;
+rowColumnLayout -nc 30;
+text -l "";
+button -w 153 -l "Load Source Objects" -c srtx;
+text -l "";
+button -w 30 -l "+" -c srad;
+text -l "" -w 8;
+button -w 153 -l "Load Target Objects" -c trtx;
+text -l "";
+button -w 30 -l "+" -c trad;
+setParent -u;
+separator -h 5;
+rowColumnLayout -nc 30;
+text -l "";
+button -l"Up" -w 40 -c srUp;
+text -l "";
+button -l"Down" -w 50 -c srDn;
+text -l "";
+button -l"Alphabetize" -w 87 -c srSort;
+text -l "" -w 8;
+button -l"Up" -w 40 -c trUp;
+text -l "";
+button -l"Down" -w 50 -c trDn;
+text -l "";
+button -l"Alphabetize" -w 87 -c trSort;
+setParent -u;
+separator -h 5;
+rowColumnLayout -nc 20;
+separator -h 15 -w 95 ;
+text  -l"Constrain" -w 80 ;
+separator -h 15 -w 95 ;
+text -l"" -w 25;
+separator -h 15 -w 110 ;
+setParent -u;
+separator -h 5;
+rowColumnLayout -nc 10;
+radioCollection;
+text -l "";
+radioButton -l"Parent" -w 71 pr;
+radioButton -l"Point" -w 71 pt;
+radioButton -l"Orient" -w 71 or;
+radioButton -l"Scale" -w 80 sc;
+radioButton -l"Parent Object" -w 110 po;
+setParent -u;
+separator -h 10;
+rowColumnLayout -nc 10;
+radioCollection;
+text -l "";
+radioButton -l"Maintain Offset" -w 150 mo;
+radioButton -l"Delete Constraint" -w 143 dl;
+radioButton -l"Skin Transfer" -w 120 sk;
+setParent -u;
+separator -h 10;
+rowColumnLayout -nc 20;
+separator -h 15 -w 150 ;
+text -l"Direct  Connect" -w 110 dc;
+separator -h 15 -w 150 ;
+setParent -u;
+separator -h 10;
+rowColumnLayout -nc 10;
+text -l "" ;
+iconTextButton -style "textOnly" -l"Translate" -bgc 0.4 0.4 0.4 -w 124 -c tc -dcc dtc;
+text -l "" ;
+iconTextButton -style "textOnly" -l"Rotate" -bgc 0.4 0.4 0.4 -w 124 -c rc -dcc drc;
+text -l "" ;
+iconTextButton -style "textOnly" -l"Scale" -bgc 0.4 0.4 0.4 -w 124 -c sc -dcc dsc;
+setParent -u;
+rowColumnLayout -nc 50;
+text -l "" -w 22;
+checkBox -l "X"  tx;
+text -l "" ;
+checkBox -l "Y"  ty;
+text -l "" ;
+checkBox -l "Z"  tz;
+text -l "" -w 32;
+checkBox -l "X" rx;
+text -l "" ;
+checkBox -l "Y" ry;
+text -l "" ;
+checkBox -l "Z" rz;
+text -l "" -w 32;
+checkBox -l "X" sx;
+text -l "" ;
+checkBox -l "Y" sy;
+text -l "" ;
+checkBox -l "Z" sz;
+setParent -u;
+separator -h 5;
+separator -h 15 -w 400  -st "in";
+rowColumnLayout -nc 10;
+text -l "" -w 50;
+radioCollection;
+radioButton -l"One  >>>  One" -w 200 -sl ri;
+radioButton -l"One  >>>  All" rii;
+setParent -u;
+separator -h 15 -w 400  -st "in";
+rowColumnLayout -nc 10;
+text -l "";
+button -l"<<< Connect >>>" -w 383 -h 25 -c cnt cnt;
+rowColumnLayout -nc 10;
+radioCollection;
+radioButton -en off -vis off dc;
+}
+UI;
+global proc UI2()
+{
+    window -e -h 700 qc;
+    rowColumnLayout -e -vis on uii;
+    rowColumnLayout -e -vis on uiii;
+    separator -e -h 5 sp;
+    button -e -en off cnt;
+}
+//-------------------------------------------------------------------------------------------------
+global proc n()
+{
+    window -e -h 656 qc;
+    rowColumnLayout -e -vis off uii;
+    rowColumnLayout -e -vis off uiii;
+    separator -e -h 1 sp;
+    button -e -en on cnt;
+    defTx;
+}
+
+global proc defTx()
+{
+    text -e -l "... Quick way to connect multiple objects at a time ..." -nbg on txt;
+}
+
+global proc nobjTx()
+{
+    text -e -l "No object selected" -bgc 0.5 0 0 txt;
+}
+
+global proc qObjTx()
+{
+    string $sel[] = `ls -sl`;
+    if(`size $sel` == 1)
+         {
+             text -e -l "Selected object is already connected or locked" -bgc 0.5 0 0 txt; 
+         }
+         else
+         {
+             text -e -l "Selected objects are already connected or locked" -bgc 0.5 0 0 txt;
+         }
+}
+
+global proc srtx()
+{
+    loadTx("srtx");
+}
+
+global proc trtx()
+{
+    loadTx("trtx");
+}
+
+global proc loadTx(string $x)
+{
+    string $sel[] = `ls -sl`;
+    if(`size $sel`!=0)
+    {
+        defTx;
+        textScrollList -e -ra $x;
+        for($i in $sel)
+        {
+            textScrollList -e -a $i $x;
+        }
+        select -cl;
+    }
+    else
+    {
+        nobjTx;
+    }
+}
+
+global proc srad()
+{
+    ad("srtx");
+}
+
+global proc trad()
+{
+    ad("trtx");
+}
+
+global proc ad(string $x)
+{
+    string $sel[] = `ls -sl`;
+    if(`size $sel`!=0)
+    {
+        defTx;
+        textScrollList -e -da $x;
+        string $objs[];
+        string $tx[] = `textScrollList -q -ai $x`;
+        for($i in $sel)
+        {
+            if(stringArrayContains($i, $tx)!=1)
+            {
+                textScrollList -e -a $i $x;
+            }
+            else
+            {
+                appendStringArray($objs, {$i}, 1);
+            }
+            
+        }
+        if(`size $objs` != 0)
+        {
+             if(`size $sel` == 1)
+             {
+                 text -e -l "Selected object is already loaded" -bgc 0.5 0 0 txt; 
+             }
+             else
+             {
+                 text -e -l "Selected objects are already loaded" -bgc 0.5 0 0 txt;
+             }  
+        }
+        select -cl;
+        select $objs;
+    }
+    else
+    {
+        nobjTx;
+    }
+}
+
+global proc tc()
+{
+    checkBox -e -v on tx;
+    checkBox -e -v on ty;
+    checkBox -e -v on tz;
+}
+
+global proc rc()
+{
+    checkBox -e -v on rx;
+    checkBox -e -v on ry;
+    checkBox -e -v on rz;
+}
+
+global proc sc()
+{
+    checkBox -e -v on sx;
+    checkBox -e -v on sy;
+    checkBox -e -v on sz;
+}
+
+global proc dtc()
+{
+    checkBox -e -v off tx;
+    checkBox -e -v off ty;
+    checkBox -e -v off tz;
+}
+
+global proc drc()
+{
+    checkBox -e -v off rx;
+    checkBox -e -v off ry;
+    checkBox -e -v off rz;
+}
+
+global proc dsc()
+{
+    checkBox -e -v off sx;
+    checkBox -e -v off sy;
+    checkBox -e -v off sz;
+}
+
+global proc Sort(string $x)
+{
+    defTx;
+    string $oldLst[] = `textScrollList -q -ai $x`;
+    if(`size $oldLst` != 0)
+    {
+        textScrollList -e -da $x;
+        string $newLst[] = `sort $oldLst`;
+        textScrollList -e -ra $x;
+        for($obj in $newLst)
+        {
+            textScrollList -e -a $obj $x;
+        }
+    }
+    else
+    {
+        text -e -l "List is empty" -bgc 0.5 0 0 txt;
+    }
+}
+
+global proc srSort()
+{
+    Sort("srtx");
+}
+
+global proc trSort()
+{
+    Sort("trtx");
+}
+
+global proc int common()
+{
+    string $common[];
+    string $sr[] = `textScrollList -q -ai srtx`;
+    string $tr[] = `textScrollList -q -ai trtx`;
+    for($obj in $sr)
+    {
+        if(stringArrayContains($obj, $tr)==1)
+        {
+            appendStringArray($common, {$obj}, 1);
+        }
+    }
+    for($obj in $tr)
+    {
+        if(stringArrayContains($obj, $sr)==1)
+        {
+            appendStringArray($common, {$obj}, 1);
+        }
+    }
+    string $fcom[] = stringArrayRemoveDuplicates($common);
+    select $fcom;
+    return `size $fcom`;
+}
+
+global proc string[] connObjs(string $val[])
+{
+    string $lst[];
+    string $inputs[] = $val;
+    string $objs[] = `textScrollList -q -ai trtx`;
+    for($obj in $objs)
+    {
+        for($input in $inputs)
+        {
+            string $cns[] = `listConnections -d off -s on ($obj + $input)`;
+            if(`size $cns`!=0)
+            {  
+                appendStringArray($lst, {$obj}, 1);                
+            }
+            if(`size $cns`==0)
+            {
+                if(`getAttr -se ($obj + $input)`==0)
+                {
+                    appendStringArray($lst, {$obj}, 1);
+                }
+            }
+        }
+    }
+    string $flst[] = stringArrayRemoveDuplicates($lst); 
+    return $flst;
+}
+
+global proc string[] qTr()
+{
+    string $val[] = {".tx",".ty",".tz"};
+    string $connObjs[] = connObjs($val);
+    return $connObjs;
+}
+
+global proc string[] qRt()
+{
+    string $val[] = {".rx",".ry",".rz"};
+    string $connObjs[] = connObjs($val);
+    return $connObjs;
+}
+
+global proc string[] qSc()
+{
+    string $val[] = {".sx",".sy",".sz"};
+    string $connObjs[] = connObjs($val);
+    return $connObjs;
+}
+
+global proc string[] qTx()
+{
+    string $val[] = {".tx"};
+    string $connObjs[] = connObjs($val);
+    return $connObjs;
+}
+global proc string[] qTy()
+{
+    string $val[] = {".ty"};
+    string $connObjs[] = connObjs($val);
+    return $connObjs;
+}
+global proc string[] qTz()
+{
+    string $val[] = {".tz"};
+    string $connObjs[] = connObjs($val);
+    return $connObjs;
+}
+global proc string[] qRx()
+{
+    string $val[] = {".rx"};
+    string $connObjs[] = connObjs($val);
+    return $connObjs;
+}
+global proc string[] qRy()
+{
+    string $val[] = {".ry"};
+    string $connObjs[] = connObjs($val);
+    return $connObjs;
+}
+global proc string[] qRz()
+{
+    string $val[] = {".rz"};
+    string $connObjs[] = connObjs($val);
+    return $connObjs;
+}
+global proc string[] qSx()
+{
+    string $val[] = {".sx"};
+    string $connObjs[] = connObjs($val);
+    return $connObjs;
+}
+global proc string[] qSy()
+{
+    string $val[] = {".sy"};
+    string $connObjs[] = connObjs($val);
+    return $connObjs;
+}
+global proc string[] qSz()
+{
+    string $val[] = {".sz"};
+    string $connObjs[] = connObjs($val);
+    return $connObjs;
+}
+
+global proc string[] qPo()
+{
+    string $lst[];
+    string $sr[] = `textScrollList -q -ai srtx`;
+    string $tr[] = `textScrollList -q -ai trtx`;
+    for($i=0;$i<`size $tr`;$i++)
+    {
+        string $trObj[] = `listRelatives -p $tr[$i]`;
+        if($trObj[0] == $sr[$i])
+        {
+           appendStringArray($lst, {$tr[$i]}, 1); 
+        }
+    }
+    string $flst[] = stringArrayRemoveDuplicates($lst);
+    return $flst;
+}
+
+global proc string[] qSkn()
+{
+    string $lst[];
+    string $objs[] = `textScrollList -q -ai trtx`;
+    for($obj in $objs)
+    {
+        string $skn = `findRelatedSkinCluster $obj`;
+        if(`size $skn` != 0)
+        {
+            appendStringArray($lst, {$obj}, 1);
+        }
+    }
+    string $flst[] = stringArrayRemoveDuplicates($lst);
+    return $flst;
+}
+
+global proc Yes()
+{
+    n;
+    defTx;
+    string $sr[] = `textScrollList -q -ai srtx`;
+    string $tr[] = `textScrollList -q -ai trtx`;
+    for($i=0;$i<`size $tr`;$i++)
+    {
+        if(`radioButton -q -sl ri` == 1)
+        {
+            if(`radioButton -q -sl pr` == 1)
+            {          
+                if(`radioButton -q -sl mo` == 1)
+                {
+                    parentConstraint -mo $sr[$i] $tr[$i];
+                }
+                else
+                {
+                    if(`radioButton -q -sl dl` == 1)
+                    {
+                       string $cnstr[] = `parentConstraint $sr[$i] $tr[$i]`;
+                       delete $cnstr[0];
+                    }
+                    else
+                    {
+                        parentConstraint $sr[$i] $tr[$i];
+                    }
+                }
+                ftx;
+            }//-----------------------
+            if(`radioButton -q -sl pt` == 1)
+            {          
+                if(`radioButton -q -sl mo` == 1)
+                {
+                    pointConstraint -mo $sr[$i] $tr[$i];
+                }
+                else
+                {
+                    if(`radioButton -q -sl dl` == 1)
+                    {
+                       string $cnstr[] = `pointConstraint $sr[$i] $tr[$i]`;
+                       delete $cnstr[0];
+                    }
+                    else
+                    {
+                        pointConstraint $sr[$i] $tr[$i];
+                    }
+                }
+                ftx;
+            }//-----------------------
+            if(`radioButton -q -sl or` == 1)
+            {          
+                if(`radioButton -q -sl mo` == 1)
+                {
+                    orientConstraint -mo $sr[$i] $tr[$i];
+                }
+                else
+                {
+                    if(`radioButton -q -sl dl` == 1)
+                    {
+                       string $cnstr[] = `orientConstraint $sr[$i] $tr[$i]`;
+                       delete $cnstr[0];
+                    }
+                    else
+                    {
+                        orientConstraint $sr[$i] $tr[$i];
+                    }
+                }
+                ftx;
+            }//-----------------------
+            if(`radioButton -q -sl sc` == 1)
+            {          
+                if(`radioButton -q -sl mo` == 1)
+                {
+                    scaleConstraint -mo $sr[$i] $tr[$i];
+                }
+                else
+                {
+                    if(`radioButton -q -sl dl` == 1)
+                    {
+                       string $cnstr[] = `scaleConstraint $sr[$i] $tr[$i]`;
+                       delete $cnstr[0];
+                    }
+                    else
+                    {
+                        scaleConstraint $sr[$i] $tr[$i];
+                    }
+                }
+                ftx;
+            }//-----------------------
+            if(`radioButton -q -sl po` == 1)
+            {
+                parent $tr[$i] $sr[$i];
+                select -cl;
+                ftx;
+            }//-------------------------------------
+            if(`radioButton -q -sl sk` == 1)
+            {
+                string $oldskn = `findRelatedSkinCluster $sr[$i]`;
+                string $chkskn = `findRelatedSkinCluster $tr[$i]`;
+                if(`size $chkskn`!=0)
+                {
+                    delete $chkskn;
+                }
+                string $jnts[] = `listConnections ($oldskn+".matrix")`;
+                string $newskn[] = `skinCluster -tsb -bm 0 -nw 1 -mi 5 $jnts $tr[$i]`;
+                copySkinWeights -ss $oldskn -ds $newskn -sa "closestPoint" -ia "oneToOne" -nm; 
+                select -cl;
+                text -e -l "Skin copied successfully" -bgc 0 0.5 0 txt;   
+            }//-------------------------------------
+            if(`radioButton -q -en dc` == 1)
+            {
+                if(`checkBox -q -v tx` == 1)
+                {
+                    if(`getAttr -se ($tr[$i] + ".translateX")` == 1)
+                    {
+                        connectAttr ($sr[$i] + ".translateX") ($tr[$i] + ".translateX");
+                    }
+                }
+                if(`checkBox -q -v ty` == 1)
+                {
+                    if(`getAttr -se ($tr[$i] + ".translateY")` == 1)
+                    {
+                        connectAttr ($sr[$i] + ".translateY") ($tr[$i] + ".translateY");
+                    }
+                }
+                if(`checkBox -q -v tz` == 1)
+                {
+                    if(`getAttr -se ($tr[$i] + ".translateZ")` == 1)
+                    {
+                        connectAttr ($sr[$i] + ".translateZ") ($tr[$i] + ".translateZ");
+                    }
+                }//-------------------------------------
+                if(`checkBox -q -v rx` == 1)
+                {
+                    if(`getAttr -se ($tr[$i] + ".rotateX")` == 1)
+                    {
+                        connectAttr ($sr[$i] + ".rotateX") ($tr[$i] + ".rotateX");
+                    }
+                }
+                if(`checkBox -q -v ry` == 1)
+                {
+                    if(`getAttr -se ($tr[$i] + ".rotateY")` == 1)
+                    {
+                        connectAttr ($sr[$i] + ".rotateY") ($tr[$i] + ".rotateY");
+                    }
+                }
+                if(`checkBox -q -v rz` == 1)
+                {
+                    if(`getAttr -se ($tr[$i] + ".rotateZ")` == 1)
+                    {
+                        connectAttr ($sr[$i] + ".rotateZ") ($tr[$i] + ".rotateZ");
+                    }
+                }//-------------------------------------
+                if(`checkBox -q -v sx` == 1)
+                {
+                    if(`getAttr -se ($tr[$i] + ".scaleX")` == 1)
+                    {
+                        connectAttr ($sr[$i] + ".scaleX") ($tr[$i] + ".scaleX");
+                    }
+                }
+                if(`checkBox -q -v sy` == 1)
+                {
+                    if(`getAttr -se ($tr[$i] + ".scaleY")` == 1)
+                    {
+                        connectAttr ($sr[$i] + ".scaleY") ($tr[$i] + ".scaleY");
+                    }
+                }
+                if(`checkBox -q -v sz` == 1)
+                {
+                    if(`getAttr -se ($tr[$i] + ".scaleZ")` == 1)
+                    {
+                        connectAttr ($sr[$i] + ".scaleZ") ($tr[$i] + ".scaleZ");
+                    }
+                }//-------------------------------------
+                ftx;
+            }
+        }
+        else
+        {
+            if(`radioButton -q -sl pr` == 1)
+            {          
+                if(`radioButton -q -sl mo` == 1)
+                {
+                    parentConstraint -mo $sr[0] $tr[$i];
+                }
+                else
+                {
+                    if(`radioButton -q -sl dl` == 1)
+                    {
+                       string $cnstr[] = `parentConstraint $sr[0] $tr[$i]`;
+                       delete $cnstr[0];
+                    }
+                    else
+                    {
+                        parentConstraint $sr[0] $tr[$i];
+                    }
+                }
+                ftx;
+            }//-----------------------
+            if(`radioButton -q -sl pt` == 1)
+            {          
+                if(`radioButton -q -sl mo` == 1)
+                {
+                    pointConstraint -mo $sr[0] $tr[$i];
+                }
+                else
+                {
+                    if(`radioButton -q -sl dl` == 1)
+                    {
+                       string $cnstr = `pointConstraint $sr[0] $tr[$i]`;
+                       delete $cnstr;
+                    }
+                    else
+                    {
+                        pointConstraint $sr[0] $tr[$i];
+                    }
+                }
+                ftx;
+            }//-----------------------
+            if(`radioButton -q -sl or` == 1)
+            {          
+                if(`radioButton -q -sl mo` == 1)
+                {
+                    orientConstraint -mo $sr[0] $tr[$i];
+                }
+                else
+                {
+                    if(`radioButton -q -sl dl` == 1)
+                    {
+                       string $cnstr[] = `orientConstraint $sr[0] $tr[$i]`;
+                       delete $cnstr[0];
+                    }
+                    else
+                    {
+                        orientConstraint $sr[0] $tr[$i];
+                    }
+                }
+                ftx;
+            }//-----------------------
+            if(`radioButton -q -sl sc` == 1)
+            {          
+                if(`radioButton -q -sl mo` == 1)
+                {
+                    scaleConstraint -mo $sr[0] $tr[$i];
+                }
+                else
+                {
+                    if(`radioButton -q -sl dl` == 1)
+                    {
+                       string $cnstr[] = `scaleConstraint $sr[0] $tr[$i]`;
+                       delete $cnstr[0];
+                    }
+                    else
+                    {
+                        scaleConstraint $sr[0] $tr[$i];
+                    }
+                }
+                ftx;
+            }//-----------------------
+            if(`radioButton -q -sl po` == 1)
+            {
+                parent $tr[$i] $sr[0];
+                select -cl;
+                ftx;
+            }//-------------------------------------
+            if(`radioButton -q -sl sk` == 1)
+            {
+                string $oldskn = `findRelatedSkinCluster $sr[0]`;
+                string $chkskn = `findRelatedSkinCluster $tr[$i]`;
+                if(`size $chkskn`!=0)
+                {
+                    delete $chkskn;
+                }
+                string $jnts[] = `listConnections ($oldskn+".matrix")`;
+                string $newskn[] = `skinCluster -tsb -bm 0 -nw 1 -mi 5 $jnts $tr[$i]`;
+                copySkinWeights -ss $oldskn -ds $newskn -sa "closestPoint" -ia "oneToOne" -nm; 
+                select -cl;
+                text -e -l "Skin copied successfully" -bgc 0 0.5 0 txt;   
+            }//-------------------------------------
+            if(`radioButton -q -en dc` == 1)
+            {
+                if(`checkBox -q -v tx` == 1)
+                {
+                    if(`getAttr -se ($tr[$i] + ".translateX")` == 1)
+                    {
+                        connectAttr ($sr[0] + ".translateX") ($tr[$i] + ".translateX");
+                    }
+                }
+                if(`checkBox -q -v ty` == 1)
+                {
+                    if(`getAttr -se ($tr[$i] + ".translateY")` == 1)
+                    {
+                        connectAttr ($sr[0] + ".translateY") ($tr[$i] + ".translateY");
+                    }
+                }
+                if(`checkBox -q -v tz` == 1)
+                {
+                    if(`getAttr -se ($tr[$i] + ".translateZ")` == 1)
+                    {
+                        connectAttr ($sr[0] + ".translateZ") ($tr[$i] + ".translateZ");
+                    }
+                }//-------------------------------------
+                if(`checkBox -q -v rx` == 1)
+                {
+                    if(`getAttr -se ($tr[$i] + ".rotateX")` == 1)
+                    {
+                        connectAttr ($sr[0] + ".rotateX") ($tr[$i] + ".rotateX");
+                    }
+                }
+                if(`checkBox -q -v ry` == 1)
+                {
+                    if(`getAttr -se ($tr[$i] + ".rotateY")` == 1)
+                    {
+                        connectAttr ($sr[0] + ".rotateY") ($tr[$i] + ".rotateY");
+                    }
+                }
+                if(`checkBox -q -v rz` == 1)
+                {
+                    if(`getAttr -se ($tr[$i] + ".rotateZ")` == 1)
+                    {
+                        connectAttr ($sr[0] + ".rotateZ") ($tr[$i] + ".rotateZ");
+                    }
+                }//-------------------------------------
+                if(`checkBox -q -v sx` == 1)
+                {
+                    if(`getAttr -se ($tr[$i] + ".scaleX")` == 1)
+                    {
+                        connectAttr ($sr[0] + ".scaleX") ($tr[$i] + ".scaleX");
+                    }
+                }
+                if(`checkBox -q -v sy` == 1)
+                {
+                    if(`getAttr -se ($tr[$i] + ".scaleY")` == 1)
+                    {
+                        connectAttr ($sr[0] + ".scaleY") ($tr[$i] + ".scaleY");
+                    }
+                }
+                if(`checkBox -q -v sz` == 1)
+                {
+                    if(`getAttr -se ($tr[$i] + ".scaleZ")` == 1)
+                    {
+                        connectAttr ($sr[0] + ".scaleZ") ($tr[$i] + ".scaleZ");
+                    }
+                }//-------------------------------------
+                ftx;
+            }
+        }
+    }
+}
+
+global proc cnt()
+{
+    if(common() == 0)
+    {
+        defTx;
+        textScrollList -e -da srtx;
+        textScrollList -e -da trtx;
+        radioButton -e -en off dc;
+        string $ck[] = {"tx","ty","tz","rx","ry","rz","sx","sy","sz"};
+        for($x in $ck)
+        {
+            if(`checkBox -q -v $x` == 1)
+            {
+                radioButton -e -en on dc;
+                break;
+            }
+        }
+        string $sr[] = `textScrollList -q -ai srtx`;
+        string $tr[] = `textScrollList -q -ai trtx`;
+        if(`size $sr` != 0)
+        {
+            if(`size $tr` != 0)
+            {
+                string $trObjs[] = qTr();
+                string $rtObjs[] = qRt();
+                string $scObjs[] = qSc();
+                string $TxObjs[] = qTx();
+                string $TyObjs[] = qTy();
+                string $TzObjs[] = qTz();
+                string $RxObjs[] = qRx();
+                string $RyObjs[] = qRy();
+                string $RzObjs[] = qRz();
+                string $SxObjs[] = qSx();
+                string $SyObjs[] = qSy();
+                string $SzObjs[] = qSz();
+                string $poObjs[] = qPo();
+                string $sknObjs[] = qSkn();
+                string $objs[] = stringArrayCatenate($trObjs, $rtObjs);
+                if(`radioButton -q -sl pr` == 1)
+                {
+                    if(`size $objs` == 0)
+                    {
+                        Yes;
+                    }
+                    else
+                    {
+                        select $objs;
+                        qObjTx;
+                        UI2;
+                    }
+                }
+                else if(`radioButton -q -sl pt` == 1)
+                {
+                    if(`size $trObjs` == 0)
+                    {
+                        Yes;
+                    }
+                    else
+                    {
+                        select $trObjs;
+                        qObjTx;
+                        UI2;
+                    }
+                }
+                else if(`radioButton -q -sl or` == 1)
+                {
+                    if(`size $rtObjs` == 0)
+                    {
+                        Yes;
+                    }
+                    else
+                    {
+                        select $rtObjs;
+                        qObjTx;
+                        UI2;
+                    }
+                }
+                else if(`radioButton -q -sl sc` == 1)
+                {
+                    if(`size $scObjs` == 0)
+                    {
+                        Yes;
+                    }
+                    else
+                    {
+                        select $scObjs;
+                        qObjTx;
+                        UI2;
+                    }
+                }
+                else if(`radioButton -q -sl po` == 1)
+                {
+                    if(`size $poObjs` == 0)
+                    {
+                        Yes;
+                    }
+                    else
+                    { 
+                        if(`size $poObjs` == 1)
+                        {
+                            text -e -l "Selected target object is already a child of a source object" -bgc 0.5 0 0 txt; 
+                        }
+                        else
+                        {
+                            text -e -l "Selected target objects are already a children of respective source object" -bgc 0.5 0 0 txt;
+                        }
+                        select $poObjs;
+                        //UI2;
+                    }
+                }
+                else if(`radioButton -q -sl sk` == 1)
+                {
+                    if(`size $scObjs` == 0)
+                    {
+                        Yes;
+                    }
+                    else
+                    {
+                        select $sknObjs;
+                        if(`size $sknObjs` == 1)
+                        {
+                            text -e -l "Selected target object is already skin attached" -bgc 0.5 0 0 txt;
+                        }
+                        else
+                        {
+                            text -e -l "Selected target objects are already skin attached" -bgc 0.5 0 0 txt;
+                        }
+                        UI2;
+                    }
+                }
+                else if(`radioButton -q -en dc` == 1)
+                {
+                    if(`checkBox -q -v tx` == 1)
+                    {
+                        if(`size $TxObjs` == 0)
+                        {
+                            Yes;
+                        }
+                        else
+                        {
+                            select $TxObjs;
+                            qObjTx;
+                            UI2;
+                        }
+                    }
+                }
+                else
+                {
+                    text -e -l "Select one connection operation" -bgc 0.5 0 0 txt;
+                }    
+
+            }
+            else
+            {
+                text -e -l "Load target objects" -bgc 0.5 0 0 txt;
+            }
+        }
+        else
+        {
+            text -e -l "Load source objects" -bgc 0.5 0 0 txt;
+        }
+    }
+    else
+    {
+        common;
+        text -e -l "Selected object found common on both list" -bgc 0.5 0 0 txt;
+    }
+}
+
+global proc ftx()
+{
+    text -e -l "Objects connected successfully" -bgc 0 0.5 0 txt;
+}
+
+global proc srUp()
+{
+    up("srtx");
+}
+
+global proc trUp()
+{
+    up("trtx");
+}
+
+global proc up(string $tx)
+{
+    string $sel[] = `textScrollList -q -si $tx`;
+    if(`size $sel`!=0)
+    {
+        defTx;
+        string $Lst[] = `textScrollList -q -ai $tx`;
+        if(stringArrayFind($sel[0], 0, $Lst) != 0)
+        {
+            for($item in $sel)
+            {
+                int $pos = stringArrayFind( $item, 0, $Lst);
+                stringArrayInsertAtIndex(($pos-1), $Lst, $item);
+                $Lst = stringArrayRemoveDuplicates($Lst);             
+            }
+            textScrollList -e -ra $tx;
+            for($obj in $Lst)
+            {
+                textScrollList -e -a $obj $tx;              
+            }
+            for($i in $sel)
+            {
+                textScrollList -e -si $i $tx;
+            }
+        }
+    }
+    else
+    {
+        text -e -l "None item selected" -bgc 0.5 0 0 txt;
+    }
+}
+
+global proc srDn()
+{
+    dn("srtx");
+}
+
+global proc trDn()
+{
+    dn("trtx");
+}
+
+global proc dn(string $tx)
+{
+    string $sel[] = `textScrollList -q -si $tx`;
+    if(`size $sel`!=0)
+    {
+        defTx;
+        string $Lst[] = `textScrollList -q -ai $tx`;
+        int $sz = `size $sel`;
+        string $rev[];
+        for($x=0;$x<`size $sel`;$x++)
+        {
+            $rev[$sz - 1 - $x] = $sel[$x];
+        }
+        if(stringArrayFind($sel[`size $sel`-1], 0, $Lst) != `size $Lst`-1)
+        {
+            for($item in $rev)
+            {
+                int $pos = stringArrayFind( $item, 0, $Lst);
+                stringArrayInsertAtIndex(($pos+2), $Lst, $item);
+                stringArrayRemoveAtIndex($pos, $Lst);             
+            }
+            textScrollList -e -ra $tx;
+            for($obj in $Lst)
+            {
+                textScrollList -e -a $obj $tx;              
+            }
+            for($i in $sel)
+            {
+                textScrollList -e -si $i $tx;
+            }
+        }
+    }
+    else
+    {
+        text -e -l "None item selected" -bgc 0.5 0 0 txt;
+    }
+}
+
+
+
+
+
+
+
